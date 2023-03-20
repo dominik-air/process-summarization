@@ -1,11 +1,9 @@
 from transformers import pipeline
+from utils import get_process_files, format_summary
+
 
 if __name__ == "__main__":
-    files = (
-        "processes/GivingWaystoImprove.txt",
-        "processes/MakingPositiveStatements.txt",
-        "processes/ProvidingEffectiveFeedback.txt",
-    )
+    files = get_process_files()
     texts = []
     for filename in files:
         with open(filename) as f:
@@ -13,6 +11,5 @@ if __name__ == "__main__":
             texts.append(text)
     summarizer = pipeline("summarization", model="knkarthick/MEETING_SUMMARY")
     summaries = [out["summary_text"] for out in summarizer(texts)]
-    for summary in summaries:
-        print(summary)
-        print("-" * 80)
+    for filename, summary in zip(files, summaries):
+        print(format_summary(filename, summary))

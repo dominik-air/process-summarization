@@ -1,7 +1,7 @@
 import spacy
 from spacy.tokens import Doc
 from spacy.tokens.span import Span
-
+from utils import get_process_files, format_summary
 
 def create_frequency_table(doc: Doc) -> dict[str, int]:
     frequency_table = dict()
@@ -56,14 +56,9 @@ def run_extractive_algorithm(text: str) -> str:
 
 
 if __name__ == "__main__":
-    files = (
-        "processes/GivingWaystoImprove.txt",
-        "processes/MakingPositiveStatements.txt",
-        "processes/ProvidingEffectiveFeedback.txt",
-    )
+    files = get_process_files()
     for filename in files:
         with open(filename) as f:
             text = "".join(s.strip() for s in f.readlines())
         summary = run_extractive_algorithm(text)
-        print(summary)
-        print("-" * 80)
+        print(format_summary(filename, summary))
