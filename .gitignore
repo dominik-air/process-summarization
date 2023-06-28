@@ -1,3 +1,6 @@
 /venv
 .DS_STORE
 __pycache__
+node_modules
+.bpmnlintrc
+*.pdf

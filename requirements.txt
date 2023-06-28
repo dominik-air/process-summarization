@@ -1,3 +1,5 @@
 spacy
 transformers
 torch
+fastapi
+scikit-learn
