@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BPMN Model Comparison</title>
+  <style>
+    #canvas1, #canvas2 {
+      width: 45%;
+      height: 80vh;
+      display: inline-block;
+      border: 1px solid black;
+    }
+  </style>
+  <script src="https://unpkg.com/bpmn-js/dist/bpmn-viewer.development.js"></script>
+</head>
+<body>
+  <h1>BPMN Model Comparison</h1>
+  <p>Select two BPMN models to compare side-by-side:</p>
+  <select id="model1">
+    <option value="">Select Model 1</option>
+  </select>
+  <select id="model2">
+    <option value="">Select Model 2</option>
+  </select>
+  <button id="compareBtn">Compare</button>
+  <br><br>
+  <div id="canvas1"></div>
+  <div id="canvas2"></div>
+  <script>
+    const model1Select = document.getElementById('model1');
+    const model2Select = document.getElementById('model2');
+    const compareBtn = document.getElementById('compareBtn');
+
+    const viewer1 = new BpmnJS({ container: '#canvas1' });
+    const viewer2 = new BpmnJS({ container: '#canvas2' });
+
+    // Fetch available models from backend and populate dropdowns
+    async function fetchModels() {
+      // Replace the URL with your backend endpoint for fetching available models
+      const response = await fetch('http://localhost:8000/models');
+      const data = await response.json();
+      const models = data.models;
+      models.forEach(model => {
+        const option1 = document.createElement('option');
+        const option2 = document.createElement('option');
+        option1.value = option2.value = model.url;
+        option1.text = option2.text = model.name;
+        model1Select.add(option1);
+        model2Select.add(option2);
+      });
+    }
+
+    async function fetchDiagram(url) {
+      const response = await fetch(url);
+      return response.text();
+    }
+
+    async function displayDiagram(viewer, url) {
+      try {
+        const bpmnXML = await fetchDiagram(url);
+        await viewer.importXML(bpmnXML);
+        viewer.get('canvas').zoom('fit-viewport');
+      } catch (err) {
+        console.error('Failed to import BPMN diagram:', err);
+      }
+    }
+
+    compareBtn.addEventListener('click', () => {
+      const model1Url = 'http://localhost:8000' + model1Select.value;
+      const model2Url = 'http://localhost:8000' + model2Select.value;
+      console.log(model1Url);
+      if (model1Url && model2Url) {
+        displayDiagram(viewer1, model1Url);
+        displayDiagram(viewer2, model2Url);
+      } else {
+        alert('Please select two models to compare.');
+      }
+    });
+
+    fetchModels();
+  </script>
+</body>
+</html>
