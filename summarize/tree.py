@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 from collections import defaultdict
-from cluster import vectorizer, get_clusters
-from onesentence import summarize_sentences
+from .cluster import vectorizer, get_clusters
+from .onesentence import summarize_sentences
 
 class BPMNGraph:
     def __init__(self):

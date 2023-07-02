@@ -1,18 +1,10 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sentence_transformers import SentenceTransformer
 from sklearn.cluster import KMeans
 
 
 def vectorizer(sentences):
     vectorizer = TfidfVectorizer(stop_words="english")
     X = vectorizer.fit_transform(sentences)
-    kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
-    return kmeans.labels_
-
-
-def bert(sentences):
-    model = SentenceTransformer("all-MiniLM-L6-v2")
-    X = model.encode(sentences)
     kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
     return kmeans.labels_
 
